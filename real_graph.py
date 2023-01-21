@@ -52,7 +52,7 @@ class graph:
         self.num_edges = df.shape[0]
         print('Vertex = {}'.format(self.num_vertices))
         print('Edge = {}'.format(self.num_edges))
-        self.orginal_graph = np.zeros(shape=(self.num_vertices,self.num_vertices),dtype= np.int)
+        self.orginal_graph = np.zeros(shape=(self.num_vertices,self.num_vertices),dtype= np.int_)
 
         for edge_index in range(self.num_edges):
             tmp_edge = df.iloc[edge_index]
@@ -82,7 +82,7 @@ class graph:
         sampled_edge_induice = np.random.choice(len(potential_edges),size=self.num_edges,replace=False).tolist()
         sampled_edges = [ potential_edges[x] for x in sampled_edge_induice ]
 
-        self.orginal_graph = np.ones(shape=(self.num_vertices,self.num_vertices),dtype= np.int) * LARGE_INT
+        self.orginal_graph = np.ones(shape=(self.num_vertices,self.num_vertices),dtype= np.int_) * LARGE_INT
 
         for u,v in sampled_edges:
 
@@ -98,7 +98,15 @@ class graph:
         self.radius = np.max(np.array(self.shortest_distance)) * 0.5
 
 
+    def closest_distance(self,target_node,center_nodes):
+        distance = self.shortest_distance[target_node][center_nodes[0]]
+        node = center_nodes[0]
+        for center_node in center_nodes:
+            if self.shortest_distance[target_node][center_node] < distance:
+                distance = self.shortest_distance[target_node][center_node]
+                node = center_node
 
+        return  distance, node
     def ratio_threhold_center_cluster(self,distance_ratio = 0.1):
         #self.threhold = threhold
         self.center_nodes = []
@@ -162,7 +170,7 @@ class graph:
 
     def minimum_spanning_tree(self,Terminals):
         num_Terminals = len(Terminals)
-        MST = np.zeros(shape=(num_Terminals,num_Terminals),dtype= np.int)
+        MST = np.zeros(shape=(num_Terminals,num_Terminals),dtype= np.int_)
         dict_terminals = {}
         for i,u in enumerate(Terminals):
             dict_terminals[u] = i
@@ -366,8 +374,8 @@ class graph:
                         #cost += min_greedy_cost
 
                         greedy_cost = min([self.shortest_distance[x][u] for x in Terminals[:i]  ])
-
-                        predicted_cost_list = [self.shortest_distance[x][u] for x in connected_predicted_terminals  ]
+                        #fix bug
+                        predicted_cost_list = [self.shortest_distance[x][u] for x in connected_predicted_terminals  if x not in new_added_predicted_terminals_list+[u]]
                         if len(predicted_cost_list) == 0:
                             cost += greedy_cost
                         else:
