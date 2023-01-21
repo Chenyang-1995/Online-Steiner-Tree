@@ -44,3 +44,6 @@ The number of terminals sampled per cluster is 100 by default.
 
 Some functions are provided in ``draw.py``, which could be useful when drawing figures for the experiments.
 
+# Acknowledgement
+
+We thank Mirko Giacchini for the discussion on some implementation details of the proposed algorithms.
